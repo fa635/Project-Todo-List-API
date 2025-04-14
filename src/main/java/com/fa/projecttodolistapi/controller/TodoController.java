@@ -26,6 +26,11 @@ public class TodoController {
         return this.todoRepository.save(todo);
     }
 
+    @GetMapping
+    public Iterable<Todo> getAllTodos() {
+        return todoRepository.findAll();
+    }
+
     @PutMapping("/{id}")
     public Todo updateTodo(@PathVariable Long id, @Valid @RequestBody Todo todo) {
         Todo idTodo = todoRepository.findById(id)
@@ -48,4 +53,42 @@ public class TodoController {
             () -> { throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid id."); }
     );
     }
+
+
+    @GetMapping("/due-date")
+    public Iterable<Todo> getByDueDate(@RequestParam(defaultValue = "true") boolean ascendingOrder) {
+        return ascendingOrder
+            ? todoRepository.findAllByOrderByDueDateAsc()
+            : todoRepository.findAllByOrderByDueDateDesc();
+    }
+
+    @GetMapping("/priority")
+    public Iterable<Todo> getByTodoPriority(@RequestParam(defaultValue = "true") boolean ascendingOrder) {
+        return ascendingOrder
+            ? todoRepository.findAllByOrderByTodoPriorityAsc()
+            : todoRepository.findAllByOrderByTodoPriorityDesc();
+    }
+
+
+    @GetMapping("/category-and-due-date")
+    public Iterable<Todo> getByCategoryAndDueDate(@RequestParam(defaultValue = "true") boolean ascendingOrder, @RequestParam String category) {
+        return ascendingOrder
+            ? todoRepository.findByCategoryOrderByDueDateAsc(category)
+            : todoRepository.findByCategoryOrderByDueDateDesc(category);
+    }
+
+    @GetMapping("/incomplete-by-priority")
+    public Iterable<Todo> getByIncompleteByTodoPriority(@RequestParam(defaultValue = "true") boolean ascendingOrder) {
+        return ascendingOrder
+            ? todoRepository.findByCompletedFalseOrderByTodoPriorityAsc()
+            : todoRepository.findByCompletedFalseOrderByTodoPriorityDesc();
+    }
+
+    @GetMapping("/incomplete-by-due-date")
+    public Iterable<Todo> getIncompleteByDueDate(@RequestParam(defaultValue = "true") boolean ascendingOrder) {
+        return ascendingOrder
+            ? todoRepository.findByCompletedFalseOrderByDueDateAsc()
+            : todoRepository.findByCompletedFalseOrderByDueDateDesc();
+    }
+
 }
