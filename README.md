@@ -23,8 +23,8 @@ The app uses an embedded H2 database for storage and exposes endpoints for full 
 
 Clone the repository:
 ```bash
-git clone https://github.com/fa635/project-todo-api.git
-cd project-todo-api
+git clone https://github.com/fa635/Project-Todo-List-API.git
+cd Project-Todo-List-API
 ```
 
 Build the project:
