@@ -6,14 +6,14 @@
 The app uses an embedded H2 database for storage and exposes endpoints for full CRUD operations and custom queries. Validation is enforced using Jakarta Bean Validation.
 
 ## Features
-- ✅ Add todos with title, due date, category, priority, and optional description  
-- ✏️ Update todos by ID  
-- ❌ Delete todos by ID  
-- 📋 Get all todos  
-- 📅 Sort todos by due date (asc/desc)  
-- 🎯 Sort todos by priority (asc/desc)  
-- 🗂️ Filter todos by category and due date  
-- 🚩 Get only incomplete todos by due date or priority  
+- Add todos with title, due date, category, priority, and optional description  
+- Update todos by ID  
+- Delete todos by ID  
+- Get all todos  
+- Sort todos by due date (asc/desc)  
+- Sort todos by priority (asc/desc)  
+- Filter todos by category and due date  
+- Get only incomplete todos by due date or priority  
 
 ## Prerequisites
 - Java 21  
@@ -106,10 +106,10 @@ curl "http://localhost:8080/todo/category-and-due-date?category=school&ascending
 - The database schema auto-updates on startup (`spring.jpa.hibernate.ddl-auto=update`)
 
 ## Future Enhancements
-- 🔐 User authentication  
-- 📊 Swagger/OpenAPI documentation  
-- 📱 Frontend client (React/Angular)  
-- 🗓️ Notification system for upcoming todos  
+- User authentication  
+- Swagger/OpenAPI documentation  
+- Frontend client (React/Angular)  
+- Notification system for upcoming todos  
 
 ## License
 This project is open-source and free to use.
