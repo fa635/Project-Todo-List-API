@@ -3,6 +3,10 @@ package com.fa.projecttodolistapi.controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Comparator;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 
 import com.fa.projecttodolistapi.model.*;
@@ -63,10 +67,17 @@ public class TodoController {
     }
 
     @GetMapping("/priority")
-    public Iterable<Todo> getByTodoPriority(@RequestParam(defaultValue = "true") boolean ascendingOrder) {
-        return ascendingOrder
-            ? todoRepository.findAllByOrderByTodoPriorityAsc()
-            : todoRepository.findAllByOrderByTodoPriorityDesc();
+    public Iterable<Todo> getAllByTodoPriority(@RequestParam(defaultValue = "true") boolean ascendingOrder) {
+        
+        List<Todo> todos = todoRepository.findAll();
+
+        Comparator<Todo> comparator = ascendingOrder
+        ? Comparator.comparing(todo -> todo.getTodoPriority().ordinal())
+        : Comparator.comparing((Todo todo) -> todo.getTodoPriority().ordinal()).reversed();
+
+        todos.sort(comparator);
+        return todos;
+
     }
 
 
@@ -79,9 +90,15 @@ public class TodoController {
 
     @GetMapping("/incomplete-by-priority")
     public Iterable<Todo> getByIncompleteByTodoPriority(@RequestParam(defaultValue = "true") boolean ascendingOrder) {
-        return ascendingOrder
-            ? todoRepository.findByCompletedFalseOrderByTodoPriorityAsc()
-            : todoRepository.findByCompletedFalseOrderByTodoPriorityDesc();
+
+        List<Todo> todos = todoRepository.findByCompletedFalse();
+
+        Comparator<Todo> comparator = ascendingOrder
+        ? Comparator.comparing(todo -> todo.getTodoPriority().ordinal())
+        : Comparator.comparing((Todo todo) -> todo.getTodoPriority().ordinal()).reversed();
+
+        todos.sort(comparator);
+        return todos;
     }
 
     @GetMapping("/incomplete-by-due-date")
