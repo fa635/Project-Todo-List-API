@@ -6,6 +6,7 @@ import com.fa.projecttodolistapi.repository.TodoRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +63,43 @@ public class TodoControllerTest {
         
         verify(todoRepository, times(1)).save(todo1);
     }
+
+
+    @Test
+    public void testUpdateTodo_UpdatesTodoSuccessfully() {
+
+        Todo updatedTodo = new Todo();
+        updatedTodo.setTitle("Learn JUnit and Spring Boot");
+        updatedTodo.setTodoPriority(TodoPriority.LOW);
+
+        when(todoRepository.findById(todo1.getId())).thenReturn(java.util.Optional.of(todo1));
+        when(todoRepository.save(todo1)).thenReturn(todo1);
+
+        Todo result = todoController.updateTodo(todo1.getId(), updatedTodo);
+
+        assertNotNull(result);
+        assertEquals(updatedTodo.getTitle(), result.getTitle());
+        assertEquals(updatedTodo.getTodoPriority(), result.getTodoPriority());
+
+        verify(todoRepository, times(1)).save(todo1);
+    }
+    
+
+    @Test
+    public void testUpdateTodo_ThrowsExceptionWhenTodoNotFound() {
+
+        Long nonExistingId = 999L;
+        Todo updatedTodo = new Todo();
+        updatedTodo.setTitle("Non-existing Todo");
+        updatedTodo.setTodoPriority(TodoPriority.MEDIUM);
+
+        when(todoRepository.findById(nonExistingId)).thenReturn(java.util.Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () -> {
+            todoController.updateTodo(nonExistingId, updatedTodo);
+        });
+    }
+
 
 
 }
