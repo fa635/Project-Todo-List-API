@@ -35,13 +35,17 @@ public class TodoControllerTest {
         todo2 = new Todo();
         todo1.setTitle("Learn JUnit");
         todo2.setTitle("Write tests");
-        todo1.setTodoPriority(TodoPriority.HIGH);
-        todo2.setTodoPriority(TodoPriority.MEDIUM);
+        todo1.setTodoPriority(TodoPriority.LOW);
+        todo2.setTodoPriority(TodoPriority.HIGH);
 
         nonExistingId = 999L;
 
         todo1.setDueDate(LocalDateTime.of(2025, 4, 25, 10, 0, 0, 0));
         todo2.setDueDate(LocalDateTime.of(2025, 4, 24, 10, 0, 0, 0));
+
+        todo1.setCategory(TodoCategory.STUDY);
+        todo2.setCategory(TodoCategory.STUDY);
+
     }
 
     @Test
@@ -160,10 +164,7 @@ public class TodoControllerTest {
 
     @Test
     public void testGetByCategoryAndDueDate_AscendingOrder() {
-
-        todo1.setCategory(TodoCategory.STUDY);
-        todo2.setCategory(TodoCategory.STUDY);
-
+        
         List<Todo> fakeTodos = Arrays.asList(todo2, todo1);
 
         when(todoRepository.findByCategoryOrderByDueDateAsc(TodoCategory.STUDY)).thenReturn(fakeTodos);
@@ -178,9 +179,6 @@ public class TodoControllerTest {
     @Test
     public void testGetByCategoryAndDueDate_DescendingOrder() {
 
-        todo1.setCategory(TodoCategory.STUDY);
-        todo2.setCategory(TodoCategory.STUDY);
-
         List<Todo> fakeTodos = Arrays.asList(todo1, todo2);
 
         when(todoRepository.findByCategoryOrderByDueDateDesc(TodoCategory.STUDY)).thenReturn(fakeTodos);
@@ -193,11 +191,6 @@ public class TodoControllerTest {
 
     @Test
     public void testGetByIncompleteByTodoPriority_AscendingOrder() {
-        todo1.setCompleted(false);
-        todo2.setCompleted(false);
-
-        todo1.setTodoPriority(TodoPriority.LOW);
-        todo2.setTodoPriority(TodoPriority.HIGH);
 
         List<Todo> incompleteTodos = Arrays.asList(todo1, todo2);
         List<Todo> expectedSorted = Arrays.asList(todo1, todo2);
@@ -213,11 +206,6 @@ public class TodoControllerTest {
 
     @Test
     public void testGetByIncompleteByTodoPriority_DescendingOrder() {
-        todo1.setCompleted(false);
-        todo2.setCompleted(false);
-
-        todo1.setTodoPriority(TodoPriority.LOW);
-        todo2.setTodoPriority(TodoPriority.HIGH);
 
         List<Todo> incompleteTodos = Arrays.asList(todo1, todo2);
         List<Todo> expectedSorted = Arrays.asList(todo2, todo1);
@@ -229,6 +217,36 @@ public class TodoControllerTest {
         assertNotNull(result);
         assertIterableEquals(expectedSorted, result);
     }
+
+
+    @Test
+    public void testGetIncompleteByDueDate_AscendingOrder() {
+
+        List<Todo> expected = Arrays.asList(todo2, todo1);
+
+        when(todoRepository.findByCompletedFalseOrderByDueDateAsc()).thenReturn(expected);
+
+        Iterable<Todo> result = todoController.getIncompleteByDueDate(true);
+
+        assertNotNull(result);
+        assertIterableEquals(expected, result);
+    }
+
+
+    @Test
+    public void testGetIncompleteByDueDate_DescendingOrder() {
+
+        List<Todo> expected = Arrays.asList(todo1, todo2);
+
+        when(todoRepository.findByCompletedFalseOrderByDueDateDesc()).thenReturn(expected);
+
+        Iterable<Todo> result = todoController.getIncompleteByDueDate(false);
+
+        assertNotNull(result);
+        assertIterableEquals(expected, result);
+    }
+
+
 
 
 
