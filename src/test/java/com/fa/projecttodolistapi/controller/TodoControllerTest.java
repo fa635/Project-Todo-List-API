@@ -247,7 +247,33 @@ public class TodoControllerTest {
     }
 
 
+    @Test
+    public void testGetAllByTodoPriority_AscendingOrder() {
+        
+        List<Todo> unsorted = Arrays.asList(todo2, todo1);
+        List<Todo> expectedSorted = Arrays.asList(todo1, todo2);
 
+        when(todoRepository.findAll()).thenReturn(unsorted);
+
+        Iterable<Todo> result = todoController.getAllByTodoPriority(true);
+
+        assertNotNull(result);
+        assertIterableEquals(expectedSorted, result);
+    }
+
+    @Test
+    public void testGetAllByTodoPriority_DescendingOrder() {
+
+        List<Todo> unsorted = Arrays.asList(todo1, todo2);
+        List<Todo> expectedSorted = Arrays.asList(todo2, todo1);
+
+        when(todoRepository.findAll()).thenReturn(unsorted);
+
+        Iterable<Todo> result = todoController.getAllByTodoPriority(false);
+
+        assertNotNull(result);
+        assertIterableEquals(expectedSorted, result);
+    }
 
 
 
