@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class TodoControllerTest {
         todoController = new TodoController(todoRepository);
 
         todo1 = new Todo();
-        Todo todo2 = new Todo();
+        todo2 = new Todo();
         todo1.setTitle("Learn JUnit");
         todo2.setTitle("Write tests");
         todo1.setTodoPriority(TodoPriority.HIGH);
@@ -123,6 +124,40 @@ public class TodoControllerTest {
             todoController.deleteTodo(nonExistingId);
         });
     }
+
+
+    @Test
+    public void testGetByDueDate_ReturnsTodosInAscendingOrder() {
+
+        todo1.setDueDate(LocalDateTime.of(2025, 4, 25, 10, 0, 0, 0));
+        todo2.setDueDate(LocalDateTime.of(2025, 4, 24, 10, 0, 0, 0));
+
+        List<Todo> fakeTodos = Arrays.asList(todo2, todo1);
+        
+        when(todoRepository.findAllByOrderByDueDateAsc()).thenReturn(fakeTodos);
+
+        Iterable<Todo> result = todoController.getByDueDate(true);
+
+        assertNotNull(result);
+        assertEquals(fakeTodos, result);
+    }
+
+
+    @Test
+    public void testGetByDueDate_ReturnsTodosInDescendingOrder() {
+        todo1.setDueDate(LocalDateTime.of(2025, 4, 25, 10, 0, 0, 0)); // Later date
+        todo2.setDueDate(LocalDateTime.of(2025, 4, 24, 10, 0, 0, 0)); // Earlier date
+
+        List<Todo> fakeTodos = Arrays.asList(todo1, todo2);
+        
+        when(todoRepository.findAllByOrderByDueDateDesc()).thenReturn(fakeTodos);
+
+        Iterable<Todo> result = todoController.getByDueDate(false);
+
+        assertNotNull(result);
+        assertEquals(fakeTodos, result);
+    }
+
 
 
 }
