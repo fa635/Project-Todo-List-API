@@ -1,6 +1,7 @@
 package com.fa.projecttodolistapi.controller;
 
 import com.fa.projecttodolistapi.model.Todo;
+import com.fa.projecttodolistapi.model.TodoCategory;
 import com.fa.projecttodolistapi.model.TodoPriority;
 import com.fa.projecttodolistapi.repository.TodoRepository;
 
@@ -38,6 +39,9 @@ public class TodoControllerTest {
         todo2.setTodoPriority(TodoPriority.MEDIUM);
 
         nonExistingId = 999L;
+
+        todo1.setDueDate(LocalDateTime.of(2025, 4, 25, 10, 0, 0, 0));
+        todo2.setDueDate(LocalDateTime.of(2025, 4, 24, 10, 0, 0, 0));
     }
 
     @Test
@@ -129,9 +133,6 @@ public class TodoControllerTest {
     @Test
     public void testGetByDueDate_ReturnsTodosInAscendingOrder() {
 
-        todo1.setDueDate(LocalDateTime.of(2025, 4, 25, 10, 0, 0, 0));
-        todo2.setDueDate(LocalDateTime.of(2025, 4, 24, 10, 0, 0, 0));
-
         List<Todo> fakeTodos = Arrays.asList(todo2, todo1);
         
         when(todoRepository.findAllByOrderByDueDateAsc()).thenReturn(fakeTodos);
@@ -145,14 +146,46 @@ public class TodoControllerTest {
 
     @Test
     public void testGetByDueDate_ReturnsTodosInDescendingOrder() {
-        todo1.setDueDate(LocalDateTime.of(2025, 4, 25, 10, 0, 0, 0)); // Later date
-        todo2.setDueDate(LocalDateTime.of(2025, 4, 24, 10, 0, 0, 0)); // Earlier date
 
         List<Todo> fakeTodos = Arrays.asList(todo1, todo2);
         
         when(todoRepository.findAllByOrderByDueDateDesc()).thenReturn(fakeTodos);
 
         Iterable<Todo> result = todoController.getByDueDate(false);
+
+        assertNotNull(result);
+        assertEquals(fakeTodos, result);
+    }
+
+
+    @Test
+    public void testGetByCategoryAndDueDate_AscendingOrder() {
+
+        todo1.setCategory(TodoCategory.STUDY);
+        todo2.setCategory(TodoCategory.STUDY);
+
+        List<Todo> fakeTodos = Arrays.asList(todo2, todo1);
+
+        when(todoRepository.findByCategoryOrderByDueDateAsc(TodoCategory.STUDY)).thenReturn(fakeTodos);
+
+        Iterable<Todo> result = todoController.getByCategoryAndDueDate(true, TodoCategory.STUDY);
+
+        assertNotNull(result);
+        assertEquals(fakeTodos, result);
+    }
+
+
+    @Test
+    public void testGetByCategoryAndDueDate_DescendingOrder() {
+
+        todo1.setCategory(TodoCategory.STUDY);
+        todo2.setCategory(TodoCategory.STUDY);
+
+        List<Todo> fakeTodos = Arrays.asList(todo1, todo2);
+
+        when(todoRepository.findByCategoryOrderByDueDateDesc(TodoCategory.STUDY)).thenReturn(fakeTodos);
+
+        Iterable<Todo> result = todoController.getByCategoryAndDueDate(false, TodoCategory.STUDY);
 
         assertNotNull(result);
         assertEquals(fakeTodos, result);

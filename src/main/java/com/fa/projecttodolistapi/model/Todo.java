@@ -58,6 +58,6 @@ public class Todo {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
-    private TodoCategory category;
+    private TodoCategory category = TodoCategory.OTHER;
 
 }
