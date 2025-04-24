@@ -53,7 +53,7 @@ curl -X POST http://localhost:8080/todo \
     "dueDate": "2025-04-20T18:00:00",
     "completed": false,
     "todoPriority": "HIGH",
-    "category": "school"
+    "category": "STUDY"
 }'
 ```
 
@@ -72,7 +72,7 @@ curl -X PUT http://localhost:8080/todo/1 \
     "dueDate": "2025-04-22T20:00:00",
     "completed": true,
     "todoPriority": "MEDIUM",
-    "category": "school"
+    "category": "STUDY"
 }'
 ```
 
