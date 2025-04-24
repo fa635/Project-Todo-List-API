@@ -191,6 +191,46 @@ public class TodoControllerTest {
         assertEquals(fakeTodos, result);
     }
 
+    @Test
+    public void testGetByIncompleteByTodoPriority_AscendingOrder() {
+        todo1.setCompleted(false);
+        todo2.setCompleted(false);
+
+        todo1.setTodoPriority(TodoPriority.LOW);
+        todo2.setTodoPriority(TodoPriority.HIGH);
+
+        List<Todo> incompleteTodos = Arrays.asList(todo1, todo2);
+        List<Todo> expectedSorted = Arrays.asList(todo1, todo2);
+
+        when(todoRepository.findByCompletedFalse()).thenReturn(incompleteTodos);
+
+        Iterable<Todo> result = todoController.getByIncompleteByTodoPriority(true);
+
+        assertNotNull(result);
+        assertIterableEquals(expectedSorted, result);
+    }
+
+
+    @Test
+    public void testGetByIncompleteByTodoPriority_DescendingOrder() {
+        todo1.setCompleted(false);
+        todo2.setCompleted(false);
+
+        todo1.setTodoPriority(TodoPriority.LOW);
+        todo2.setTodoPriority(TodoPriority.HIGH);
+
+        List<Todo> incompleteTodos = Arrays.asList(todo1, todo2);
+        List<Todo> expectedSorted = Arrays.asList(todo2, todo1);
+
+        when(todoRepository.findByCompletedFalse()).thenReturn(incompleteTodos);
+
+        Iterable<Todo> result = todoController.getByIncompleteByTodoPriority(false);
+
+        assertNotNull(result);
+        assertIterableEquals(expectedSorted, result);
+    }
+
+
 
 
 }
