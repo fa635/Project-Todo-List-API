@@ -22,6 +22,7 @@ public class TodoControllerTest {
     private TodoController todoController;
     private Todo todo1;
     private Todo todo2;
+    private Long nonExistingId;
 
     @BeforeEach
     public void setUp() {
@@ -34,6 +35,8 @@ public class TodoControllerTest {
         todo2.setTitle("Write tests");
         todo1.setTodoPriority(TodoPriority.HIGH);
         todo2.setTodoPriority(TodoPriority.MEDIUM);
+
+        nonExistingId = 999L;
     }
 
     @Test
@@ -88,7 +91,6 @@ public class TodoControllerTest {
     @Test
     public void testUpdateTodo_ThrowsExceptionWhenTodoNotFound() {
 
-        Long nonExistingId = 999L;
         Todo updatedTodo = new Todo();
         updatedTodo.setTitle("Non-existing Todo");
         updatedTodo.setTodoPriority(TodoPriority.MEDIUM);
@@ -100,6 +102,27 @@ public class TodoControllerTest {
         });
     }
 
+
+    @Test
+    public void testDeleteTodo_DeletesTodoSuccessfully() {
+
+        when(todoRepository.findById(todo1.getId())).thenReturn(java.util.Optional.of(todo1));
+
+        todoController.deleteTodo(todo1.getId());
+
+        verify(todoRepository, times(1)).delete(todo1);
+    }
+
+
+    @Test
+    public void testDeleteTodo_ThrowsExceptionWhenTodoNotFound() {
+
+        when(todoRepository.findById(nonExistingId)).thenReturn(java.util.Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () -> {
+            todoController.deleteTodo(nonExistingId);
+        });
+    }
 
 
 }
