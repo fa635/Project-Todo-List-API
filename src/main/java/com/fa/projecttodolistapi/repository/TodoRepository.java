@@ -12,8 +12,8 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
     List<Todo> findAllByOrderByDueDateDesc();
 
     // all by category and due date
-    List<Todo> findByCategoryOrderByDueDateAsc(String category);
-    List<Todo> findByCategoryOrderByDueDateDesc(String category);
+    List<Todo> findByCategoryOrderByDueDateAsc(TodoCategory category);
+    List<Todo> findByCategoryOrderByDueDateDesc(TodoCategory category);
 
     // by incompleted to then order by priority
     List<Todo> findByCompletedFalse();

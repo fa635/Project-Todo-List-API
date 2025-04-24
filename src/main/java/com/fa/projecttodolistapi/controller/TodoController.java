@@ -82,7 +82,7 @@ public class TodoController {
 
 
     @GetMapping("/category-and-due-date")
-    public Iterable<Todo> getByCategoryAndDueDate(@RequestParam(defaultValue = "true") boolean ascendingOrder, @RequestParam String category) {
+    public Iterable<Todo> getByCategoryAndDueDate(@RequestParam(defaultValue = "true") boolean ascendingOrder, @RequestParam TodoCategory category) {
         return ascendingOrder
             ? todoRepository.findByCategoryOrderByDueDateAsc(category)
             : todoRepository.findByCategoryOrderByDueDateDesc(category);

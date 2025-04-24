@@ -55,7 +55,9 @@ public class Todo {
     @Column(name = "priority", nullable = false)
     private TodoPriority todoPriority;
 
-    @Column(name = "category", nullable = true)
-    private String category;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private TodoCategory category;
 
 }
